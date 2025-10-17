@@ -45,6 +45,7 @@ public:
 	Cell *printBuf = nullptr;
 	int8_t background = BLACK;
 	bool range = false;
+	bool invertedY = false;
 	Point topLeft;
 	double dx, dy;
 	double minX = std::numeric_limits<typeof(minX)>::infinity(),
@@ -72,6 +73,15 @@ public:
 	~Plot() {
 		if(printBuf != nullptr)
 			delete [] printBuf;
+	}
+	
+	/**
+	 * Inverts the Y axis.
+	 * By default, Y increases downwards.
+	 * @param a When true, the axis will be inverted.
+	 */
+	void invertYAxis(bool a = false) {
+		invertedY = a;
 	}
 	
 	/**
@@ -217,9 +227,17 @@ public:
 	 * Prints the buffered plot to stdout.
 	 */
 	void print() {
-		Cell *c = printBuf;
 		int8_t last;
-		for(int y = 0; y < h; y++) {
+		int startY = 0, endY = h, step = 1;
+		
+		if(invertedY) {
+			startY = h-1;
+			endY = -1;
+			step = -1;
+		}
+		
+		for(int y = startY; y != endY; y += step) {
+			Cell *c = printBuf+y*w;
 			for(int x = 0; x < w; x++, c++) {
 				if(last != c->co || x == 0) {
 					printf("\x1b[%d%d;%d%dm", c->co&0x08?9:3, c->co&0x07, 
@@ -272,7 +290,9 @@ private:
 		if(character == '\0') {
 			if(c.ch == EMPTY)
 				c.ch = BLOCK;
-
+			
+			if(invertedY)
+				y++;
 			c.co = y%2 ? c.co&0x0f|color<<4 : c.co&0xf0|color;
 		}
 		else {
