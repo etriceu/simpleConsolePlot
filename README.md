@@ -8,7 +8,7 @@ The documentation is available in the .hpp file.
 - Linux (probably other Unixes as well)
 
 # Examples
-<img width="539" height="453" alt="image" src="https://github.com/user-attachments/assets/e8b68bea-f837-4abf-aa76-67605c723ebf" />
+<img width="612" height="485" alt="image" src="https://github.com/user-attachments/assets/cbff1583-07c1-4c5e-a0a8-66e150960330" />
 
 ```cpp
 #include "simpleConsolePlot.hpp"
@@ -21,11 +21,12 @@ int main() {
 	p.setXAxisFormat();
 	p.setYAxisFormat("%5.2f");
 	p.setDrawRange(-3, -1, 3, 1);
+	p.invertYAxis(true);
 	
 	for(double x = -3; x < 3; x += 0.5) {
-		p.line(x, -tanh(x), x+0.5, -tanh(x+0.5), GREEN);
-		p.point(x, -tanh(x));
-		//p.point(x, -tanh(x), RED, 'X');
+		p.line(x, tanh(x), x+0.5, tanh(x+0.5), GREEN);
+		p.point(x, tanh(x));
+		//p.point(x, tanh(x), RED, 'X');
 	}
 	p.line(-3, 0, 3, 0, BLACK, '-');
 	p.line(0, -1, 0, 1, BLACK, '|');
